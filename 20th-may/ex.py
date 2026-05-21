@@ -139,10 +139,10 @@ def ex7() -> None:
     print(2,sep=" ", end=" ")
     for i in range(3,101,2):
         flag = True
-        for j in range(3,i//2):
+        for j in range(3,i//2,2):
             if i%j == 0:
                 flag = False
-                pass
+                break
         if flag:
             print(i, end=" ")
 
@@ -232,8 +232,8 @@ def ex13() -> list:
     return diet
 
 '''
-Combien de possibilités de recouvrement y a-t-il en connaissant n ? Sur une bande de 2 mètres sur n mètres sachant que chaque dalle fait 2x1
-mètres
+Combien de possibilités de recouvrement y a-t-il sur une bande de 2 mètres sur n mètres sachant que chaque dalle fait 2x1
+mètres et qu'il y a deux couleurs de dalle différentes ?
 '''
 def challenge(n:int) -> int:
     if n == 0 or n == 1:
@@ -245,6 +245,3 @@ def challenge(n:int) -> int:
         last = first
         first = total
     return 2**n * total
-
-for i in range(11):
-    print(challenge(i)) #0 2 8 
