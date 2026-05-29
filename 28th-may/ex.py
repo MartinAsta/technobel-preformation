@@ -14,13 +14,8 @@ Pour mener à bien cet exercice, le programme principal devrait ressembler à ce
 - Trouver la voiture ayant le temps total le plus bas et afficher son modèle, sa marque, et son temps total.
 '''
 import random
-def exercise(laps:int, length:float) -> None:
-    total_distance = laps * length
-    car1 = Car("Ford","model1",40,80)
-    car2 = Car("Audi","model2",60,75)
-    car3 = Car("Porsche","model3",65,70)
-    car4 = Car("BMW","model4",30,90)
-
+import time
+import threading
 class Car():
     def __init__(self, brand:str, model:str, min_speed:float, max_speed:float):
         self.__brand = brand
@@ -28,8 +23,8 @@ class Car():
         self.__min_speed = min_speed
         self.__max_speed = max_speed
 
-    def calculate_timer(self, distance:float) -> float:
-        return distance / self.__min_speed + (self.__max_speed - self.__min_speed) * random. random()
+    def get_speed(self) -> float:
+        return self.__min_speed + (self.__max_speed - self.__min_speed) * random.random()
     
     @property
     def brand(self):
@@ -39,4 +34,33 @@ class Car():
     def model(self):
         return self.__model
 
-exercise(5,20)
+def exercise(laps:int, lap_length:float) -> None:
+    cars = [Car("Ford","model1",40,80),
+            Car("Audi","model2",60,75),
+            Car("Porsche","model3",65,70),
+            Car("BMW","model4",30,90)]
+    threads = []
+
+    for car in cars:
+        t = threading.Thread(target=race, args=(laps,lap_length,car))
+        threads.append(t)
+        t.start()
+
+    for t in threads:
+        t.join()
+
+def race(laps:int, lap_length:float, car:Car) -> None:
+    total_time = 0
+    for i in range(laps):
+        speed = car.get_speed()
+        lap_time = (lap_length / speed) * 3600
+        total_time += lap_time
+        lap_time_minutes = lap_time // 60
+        lap_time_secondes = lap_time - lap_time_minutes * 60
+        time.sleep(lap_time)
+        print(f"The {car.brand} {car.model} finished the lap {i+1} in {int(lap_time_minutes)} minutes and {int(lap_time_secondes)} seconds !")
+    total_time_minutes = total_time // 60
+    total_time_seconds = total_time - total_time_minutes * 60
+    print(f"The {car.brand} {car.model} finished the race in {int(total_time_minutes)} minutes and {int(total_time_seconds)} seconds !")
+
+exercise(5,1)
