@@ -5,7 +5,7 @@ import random
 class Grid():
     def __init__(self, size:int):
         self.__size = size
-        self.__mines = size//2
+        self.__mines = size
         self.__mines_positions = set()
         self.__cleared_positions = set()
         self.__grid = [["⬛"] * size for _ in range(size)]
@@ -38,7 +38,7 @@ class Grid():
     
     def spawn_mines(self, first_guess:Position):
         spawned_mines = 0
-        while spawned_mines < self.__size//2:
+        while spawned_mines < self.__size:
             x = random.randint(0,self.__size - 1)
             y = random.randint(0,self.__size - 1)
             if (x,y) not in self.__mines_positions and (first_guess.x != x and first_guess.y != y):
