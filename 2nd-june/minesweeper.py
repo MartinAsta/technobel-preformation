@@ -63,26 +63,13 @@ class Grid():
                         surrounding_mines += 1
                     elif self.__grid[nx][ny] != "⬜":
                         pos_to_check.append(Position(nx,ny))
+        symbols = {"1":"1️⃣ ","2":"2️⃣ ","3":"3️⃣ ","4":"4️⃣ ","5":"5️⃣ ","6":"6️⃣ ","7":"7️⃣ ","8":"8️⃣ "}
         if surrounding_mines == 0:
             self.__grid[x][y] = "⬜"
             for p in pos_to_check:
                 self.clear_tiles(p)
-        elif surrounding_mines == 1:
-            self.__grid[x][y] = "1️⃣ "
-        elif surrounding_mines == 2:
-            self.__grid[x][y] = "2️⃣ "
-        elif surrounding_mines == 3:
-            self.__grid[x][y] = "3️⃣ "
-        elif surrounding_mines == 4:
-            self.__grid[x][y] = "4️⃣ "
-        elif surrounding_mines == 5:
-            self.__grid[x][y] = "5️⃣ "
-        elif surrounding_mines == 6:
-            self.__grid[x][y] = "6️⃣ "
-        elif surrounding_mines == 7:
-            self.__grid[x][y] = "7️⃣ "
-        elif surrounding_mines == 8:
-            self.__grid[x][y] = "8️⃣ "
+        else:
+            self.__grid[x][y] = symbols[str(surrounding_mines)]
         self.__cleared_positions.add((x,y))
         return False
 
