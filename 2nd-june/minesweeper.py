@@ -41,7 +41,7 @@ class Grid():
         while spawned_mines < self.__size:
             x = random.randint(0,self.__size - 1)
             y = random.randint(0,self.__size - 1)
-            if (x,y) not in self.__mines_positions and (first_guess.x != x and first_guess.y != y):
+            if (x,y) not in self.__mines_positions and (first_guess.x != x or first_guess.y != y):
                 self.__mines_positions.add((x,y))
                 spawned_mines += 1
                 self.__real_grid[x][y] = Mine(Position(x,y))
@@ -86,6 +86,14 @@ class Grid():
         self.__cleared_positions.add((x,y))
         return False
 
+    def drop_flag(self, flag_pos:Position):
+        x = flag_pos.x
+        y = flag_pos.y
+        if self.__grid[x][y] == "⬜":
+            print("You can't flag this spot, it's already been cleared !")
+        else:
+            self.__grid[x][y] = "🚩"
+            print(" ? ")
     
     def play(self):
         is_game_over = False
@@ -97,10 +105,13 @@ class Grid():
         self.clear_tiles(guess)
         while len(self.__cleared_positions) + self.__mines != self.__size**2 and not is_game_over:
             self.display_grid()
-            guess = input("What is the first area you want you clear ? (x,y) : ")
-            x, y = map(int, guess.split(","))
-            guess = Position(x-1, y-1)
-            is_game_over = self.clear_tiles(guess)
+            guess = input("What is the first area you want you clear ? (o/f,x,y) : ")
+            o, x, y = guess.split(",")
+            guess = Position(int(x)-1, int(y)-1)
+            if o == "o":
+                is_game_over = self.clear_tiles(guess)
+            else:
+                self.drop_flag(guess)
         if is_game_over:
             print("A mine detonated. You lose.")
         else:
@@ -117,6 +128,6 @@ class Position:
     x: int
     y: int
 
-g = Grid(5)
+g = Grid(10)
 
 g.play()
