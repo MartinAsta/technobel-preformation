@@ -45,3 +45,8 @@ class Solution:
     def minimumCost(self, cost: List[int]) -> int:
         cost.sort(reverse=True)
         return sum(c for i,c in enumerate(cost) if i%3 != 2)
+    
+t = [1,2,3]
+g = [1,2]
+for i in range(max(len(t),len(g))):
+    print(i)
