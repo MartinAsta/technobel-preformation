@@ -270,5 +270,170 @@ Input:
 Output:
 1
 '''
-def ex6() -> None:
-    pass
+def ex6(input:str) -> int:
+    count = 0
+    for c in input:
+        if c == "(":
+            count += 1
+        elif c == ")":
+            count -= 1
+    return 1 if count == 0 else 0
+#print(ex6("(coder)(byte))"))
+
+'''
+Pick Peaks
+Write a function that returns the positions and the values of the peaks (or local maxima) of a numeric array.
+
+Description
+A peak is an element that is greater than its immediate neighbors.
+
+For example:
+arr = [0, 1, 2, 5, 1, 0]
+→ The peak is at position 3 with value 5
+
+Output Format
+The function should return an object with two properties: - pos: an array of peak positions - peaks: an array of peak values
+
+If there are no peaks, return:
+
+{ pos: [], peaks: [] }
+
+Rules
+The first and last elements of the array cannot be peaks
+Input arrays will always contain integers (possibly empty)
+No need to validate input
+Plateau Rule
+A plateau occurs when consecutive elements have the same value.
+
+[1, 2, 2, 2, 1] → has a peak
+[1, 2, 2, 2, 3] → no peak
+[1, 2, 2, 2, 2] → no peak
+In the case of a plateau peak, return the position and value of the start of the plateau
+
+Examples
+Input:
+pickPeaks([3, 2, 3, 6, 4, 1, 2, 3, 2, 1, 2, 3])
+Output:
+
+{ pos: [3, 7], peaks: [6, 3] }
+
+Input:
+pickPeaks([1, 2, 2, 2, 1])
+Output:
+
+{ pos: [1], peaks: [2] }
+'''
+def ex7(moutain_range:list) -> dict:
+    pos = []
+    peaks = []
+    is_ascending = False
+    is_plateau = False
+    start_of_plateau:int
+    for i in range(1,len(moutain_range)):
+        if moutain_range[i] == moutain_range[i-1]:
+            if not is_plateau:
+                start_of_plateau = i - 1
+            is_plateau = True
+        elif moutain_range[i] > moutain_range[i-1]:
+            is_ascending = True
+        else:
+            if is_ascending:
+                if not is_plateau:
+                    pos.append(i - 1)
+                    peaks.append(moutain_range[i - 1])
+                else:
+                    pos.append(start_of_plateau)
+                    peaks.append(moutain_range[start_of_plateau])
+            is_ascending = False
+            is_plateau = False
+    return {"pos":pos,"peaks":peaks}
+
+#print(ex7([3, 2, 3, 6, 6, 4, 1, 2, 3, 2, 2, 1, 2, 3]))
+
+'''
+Range Extraction
+Description
+A format for expressing an ordered list of integers is to use a comma-separated list of either:
+
+individual integers
+or a range of integers denoted by the starting integer separated from the ending integer by a dash (-)
+A range includes all integers between the start and end values (inclusive).
+
+A sequence is only considered a range if it contains at least 3 consecutive numbers.
+
+Task
+Write a function solution(arr) that:
+
+takes a list of integers sorted in increasing order
+returns a string formatted using the range rules described above
+Rules
+Use a single number for isolated values
+Use the format start-end for ranges of 3 or more consecutive numbers
+Separate all elements with commas
+The input list will always be sorted
+Example
+Input:
+
+[-10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20]
+
+Output:
+
+"-10--8,-6,-3-1,3-5,7-11,14,15,17-20"
+
+Explanation
+-10, -9, -8 → -10--8 (range of 3 numbers)
+-6 → -6 (single number)
+-3, -2, -1, 0, 1 → -3-1
+3, 4, 5 → 3-5
+7, 8, 9, 10, 11 → 7-11
+14, 15 → 14,15 (only 2 numbers → not a range)
+17, 18, 19, 20 → 17-20
+'''
+def ex8(input:list) -> str:
+    res = str(input[0])
+    previous:int = input[0]
+    i = 1
+    while i < len(input):
+        if previous + 1 == input[i] and (i < len(input) - 1 and input[i] + 1 == input[i+1]):
+            res += "-"
+            for j in range(i,len(input)):
+                if j == len(input) - 1:
+                    res += str(input[j])
+                    i = j
+                elif input[j] + 1 != input[j+1]:
+                    res += str(input[j])
+                    i = j
+                    break
+        else:
+            res += ","+str(input[i])
+        
+        previous = input[i]
+        i += 1
+            
+    return res
+
+#print(ex8([-10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20]))
+
+
+def fib_cache(n:int,cache=None):
+    if cache == None:
+        cache = {}
+    if n <= 1:
+        return n
+    if n not in cache:
+        cache[n] = fib_cache(n-1,cache) + fib_cache(n-2,cache)
+    return cache[n]
+
+def my_cache(func):
+    cache = {}
+    def wrapper(n):
+        if n not in cache:
+            cache[n] = func(n)
+        return cache[n]
+    return wrapper
+
+@my_cache
+def fib(n:int):
+    if n <= 1:
+        return n
+    return fib(n-1) + fib(n-2)
