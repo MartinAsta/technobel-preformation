@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 import random
 
-
 class Grid():
     def __init__(self, size:int):
         self.__size = size
